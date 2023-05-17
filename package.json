@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/xiazhiqiang/openapi-service/issues"
   },
-  "homepage": "https://github.com/xiazhiqiang/openapi-service#readme"
+  "homepage": "https://github.com/xiazhiqiang/openapi-service#readme",
+  "devDependencies": {
+    "@asyncapi/generator": "^1.9.18"
+  }
 }
