@@ -5,7 +5,8 @@ var router = express.Router();
 expressWs(router); // ws中间件应用到路由中
 
 router
-  .ws("/user/getUserInfo", function (ws, req) {
+  // 获取轨迹数据
+  .ws("/traffic/getTrackData", function (ws, req) {
     ws.on("connection", function (e) {
       console.log("connection", e);
     });
@@ -24,6 +25,7 @@ router
       console.log("close", id);
     });
   })
-  .ws("/user/getUserName", function (ws, req) {});
+  //
+  .ws("/traffic/getUserName", function (ws, req) {});
 
 module.exports = router;
