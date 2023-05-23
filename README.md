@@ -11,7 +11,7 @@ cd src/asyncapi/server
 npx express-generator --view=ejs
 ```
 
-- 添加websocket服务
+- 添加 websocket 服务
 
 ```shell
 cnpm i express-ws -S
@@ -33,26 +33,20 @@ var router = express.Router();
 
 expressWs(router); // ws中间件应用到路由中
 
-router
-  .ws("/path", function (ws, req) {
-    ws.on("connection", function (e) {
-      console.log("connection", e);
-    });
+router.ws("/path", function (ws, req) {
+  console.log("connection ok", req.query);
 
-    ws.on("message", function (msg) {
-      let params = {};
-      try {
-        params = JSON.parse(msg);
-      } catch (e) {}
-
-      // todo 根据参数实时推送消息
-      // ws.send();
-    });
-
-    ws.on("close", function (id) {
-      console.log("close", id);
-    });
+  ws.on("message", function (msg) {
+    let params = {};
+    try {
+      params = JSON.parse(msg);
+    } catch (e) {}
   });
+
+  ws.on("close", function (id) {
+    console.log("close", id);
+  });
+});
 
 module.exports = router;
 ```
@@ -70,8 +64,15 @@ module.exports = router;
 
 ```shell
 # 通过nodemon监听server修改重新启动服务
+cd server
 npm run dev
 ```
 
-### client
+## client
 
+- 本地启动
+
+```shell
+cd client
+http-server ./ -c-1 --cors='*'
+```
