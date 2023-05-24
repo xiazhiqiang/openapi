@@ -23,23 +23,23 @@ try {
   let outputContent = "";
   let outputFile = "";
 
-  const ext = path.extname(entryFile);
-  if (ext === ".json") {
+  const ext = entryFile.split(".").reverse()[0];
+  if (ext === "json") {
     console.log("开始json转yaml...");
 
     const jsonObj = fse.readJSONSync(entryFile);
     outputContent = yaml.dump(jsonObj);
 
-    const fileName = path.basename(entryFile, ".json");
+    const fileName = path.basename(entryFile, "." + ext);
     outputFile = path.join(outputDir, fileName + ".yml");
-  } else if (ext === ".yml" || ext === ".yaml") {
+  } else if (ext === "yml" || ext === "yaml") {
     console.log("开始yaml转json...");
 
     const yamlString = fse.readFileSync(entryFile, { encoding: "utf-8" });
     const jsonObj = yaml.load(yamlString);
     outputContent = JSON.stringify(jsonObj, null, 2);
 
-    const fileName = path.basename(entryFile);
+    const fileName = path.basename(entryFile, "." + ext);
     outputFile = path.join(outputDir, fileName + ".json");
   } else {
     throw new Error("无效的输入文件类型");
