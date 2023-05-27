@@ -21,7 +21,9 @@ module.exports = {
         "ci", // 与持续集成服务有关的改动
       ],
     ],
-    // subject 大小写不做校验
-    "subject-case": [0],
+    "type-empty": [2, "never"], // type 不能为空
+    "type-case": [0], // type 不限制大小写
+    "subject-empty": [2, "never"], // subject 不能为空
+    "subject-case": [0], // subject 大小写不做校验
   },
 };
