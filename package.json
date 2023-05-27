@@ -1,7 +1,7 @@
 {
   "name": "openapi-service",
   "version": "1.0.0",
-  "description": "",
+  "description": "openapi",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

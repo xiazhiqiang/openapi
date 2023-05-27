@@ -5,7 +5,7 @@
 ## 安装依赖
 
 ```
-cnpm i
+cnpm i @commitlint/cli @commitlint/config-conventional husky -D
 ```
 
 ## 新版 husky 配置
