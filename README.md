@@ -2,37 +2,22 @@
 
 基于 openapi 协议规范，对 HTTP/WebSocket 接口服务及前端请求实现 Demo。
 
-## 安装依赖
+## 目录说明
 
-```
-cnpm i @commitlint/cli @commitlint/config-conventional husky -D
-```
+- asyncapi/client: websocket 浏览器客户端实现
+- asyncapi/data: websocket 协议定义及转换工具
+- asyncapi/server: websocket nodejs 服务实现
 
-## 新版 husky 配置
-
-- 卸载并还原 husky
+## 本地启动
 
 ```shell
-npm uninstall husky
-rm -rf .husky && git config --unset core.hooksPath
-```
+# 启动websocket服务
+cd asyncapi/server && npm run dev
 
-- 在 package.json 中配置 scripts 添加属性
-
-```json
-{
-  "scripts": {
-    "prepare": "husky install"
-  }
-}
-```
-
-- 添加提交校验
-
-```shell
-npx husky add .husky/commit-msg 'npx --no -- commitlint --edit ${1}'
+# 启动websocket客户端
+cd asyncapi/client && npm run dev
 ```
 
 ## 参考
 
-- [husky 配置](https://blog.qbb.sh/post/2022/01/11/husky/)
+- [AsyncApi 2.6.0](https://www.asyncapi.com/docs/reference/specification/v2.6.0)
