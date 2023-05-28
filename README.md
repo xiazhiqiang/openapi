@@ -1,78 +1,38 @@
-# openapi-service
+# openapi
 
-## asyncapi
+基于 openapi 协议规范，对 HTTP/WebSocket 接口服务及前端请求实现 Demo。
 
-### server
+## 安装依赖
 
-- 初始化项目
+```
+cnpm i @commitlint/cli @commitlint/config-conventional husky -D
+```
+
+## 新版 husky 配置
+
+- 卸载并还原 husky
 
 ```shell
-cd src/asyncapi/server
-npx express-generator --view=ejs
+npm uninstall husky
+rm -rf .husky && git config --unset core.hooksPath
 ```
 
-- 添加 websocket 服务
-
-```shell
-cnpm i express-ws -S
-```
-
-```javascript
-// bin/www
-/**
- * Create Websocket server
- */
-require("express-ws")(app, server);
-```
-
-```javascript
-// routes/wsproxy.js
-var express = require("express");
-var expressWs = require("express-ws"); // 引入ws中间件
-var router = express.Router();
-
-expressWs(router); // ws中间件应用到路由中
-
-router.ws("/path", function (ws, req) {
-  console.log("connection ok", req.query);
-
-  ws.on("message", function (msg) {
-    let params = {};
-    try {
-      params = JSON.parse(msg);
-    } catch (e) {}
-  });
-
-  ws.on("close", function (id) {
-    console.log("close", id);
-  });
-});
-
-module.exports = router;
-```
-
-- 本地启动
+- 在 package.json 中配置 scripts 添加属性
 
 ```json
-// package.json
 {
   "scripts": {
-    "dev": "nodemon ./bin/www"
+    "prepare": "husky install"
   }
 }
 ```
 
-```shell
-# 通过nodemon监听server修改重新启动服务
-cd server
-npm run dev
-```
-
-## client
-
-- 本地启动
+- 添加提交校验
 
 ```shell
-cd client
-http-server ./ -c-1 --cors='*'
+npx husky add .husky/commit-msg 'npx --no -- commitlint --edit ${1}'
 ```
+
+## 参考
+
+- [husky 配置](https://blog.qbb.sh/post/2022/01/11/husky/)

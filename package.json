@@ -1,10 +1,11 @@
 {
   "name": "openapi-service",
   "version": "1.0.0",
-  "description": "",
+  "description": "openapi",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -18,6 +19,8 @@
   },
   "homepage": "https://github.com/xiazhiqiang/openapi-service#readme",
   "devDependencies": {
-    "@asyncapi/generator": "^1.9.18"
+    "@commitlint/cli": "^17.6.3",
+    "@commitlint/config-conventional": "^17.6.3",
+    "husky": "^8.0.3"
   }
 }
