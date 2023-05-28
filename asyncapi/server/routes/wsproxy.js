@@ -46,6 +46,7 @@ router
     });
 
     ws.on("close", function (id) {
+      ws.close(id);
       console.log("close", id);
     });
   })
