@@ -58,6 +58,8 @@ module.exports = router;
 
 - 本地启动
 
+> 默认端口号 3000，可配置 PORT=xxx nodemon ./bin/www
+
 ```json
 // package.json
 {
@@ -71,5 +73,3 @@ module.exports = router;
 # 通过nodemon监听server修改重新启动服务
 npm run dev
 ```
-
-### client

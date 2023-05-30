@@ -146,13 +146,13 @@ npm start -- --entry=entry_api.yml
         // 每个参数定义
         "interId": "#/components/parameters/interId"
       },
-      // 定义应用发送到通道的数据，字段详见[operationObject](https://www.asyncapi.com/docs/reference/specification/v2.6.0#operationObject)
+      // 定义应用发送到通道的数据（发送给客户端的消息定义），字段详见[operationObject](https://www.asyncapi.com/docs/reference/specification/v2.6.0#operationObject)
       "subscribe": {
         "message": {
           "$ref": "#/components/messages/InterDTO"
         }
       },
-      // 定义应用从通道中消费的数据，其参数定义与subscribe类似，字段详见[operationObject](https://www.asyncapi.com/docs/reference/specification/v2.6.0#operationObject)
+      // 定义应用从通道中消费的数据（响应处理来自客户端的消息），其参数定义与subscribe类似，字段详见[operationObject](https://www.asyncapi.com/docs/reference/specification/v2.6.0#operationObject)
       "publish": {},
       // 键描述协议的名称，值描述通道的协议定义
       "bindings": {
