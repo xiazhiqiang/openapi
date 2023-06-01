@@ -2,10 +2,9 @@
  * 定义默认websocket默认实现
  * 支持覆写默认实现，这一层是为了外部覆写ws请求
  */
-import { IDefaultRequestProps } from './typings';
 
-let _prefix = '';
-let _ws = (p: IDefaultRequestProps): any => {};
+let _prefix: string;
+let _ws: (p) => void | any;
 
 /**
  * 默认 Websocket 实现，保持通用性
@@ -14,12 +13,12 @@ export const defaultRequest = ({
   prefix = '',
   url = '',
   path = '',
-  extra = {},
+  extra,
   onOpen,
   onError,
   onClose,
   onMessage,
-}: IDefaultRequestProps) => {
+}) => {
   try {
     if (!window.WebSocket) {
       throw new Error('浏览器不支持！');
@@ -88,7 +87,9 @@ export const overrideWS = (baseWS: any) => {
 };
 
 export const setPrefix = (prefix: string) => {
-  _prefix = prefix;
+  if (prefix) {
+    _prefix = prefix;
+  }
 };
 
 export { _ws as default };

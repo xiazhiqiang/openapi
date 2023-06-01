@@ -6,22 +6,15 @@
  */
 
 import wsRequest from '../index';
-import { IDefaultRequestProps } from '../typings';
-
-export interface IWsMiddleProps<QUERY, PARAMETERS>
-  extends IDefaultRequestProps {
-  parameters?: PARAMETERS;
-  query?: QUERY;
-}
 
 // websocket请求服务
 export default function ({
   prefix = '',
   url = '',
   path = '',
-  query,
+  query = {},
   ...others
-}: IWsMiddleProps<any, any>) {
+}) {
   // todo 参数处理，将prefix和path转换为ws url
   if (process.env.NODE_ENV !== 'production') {
     if (!prefix) {
