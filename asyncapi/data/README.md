@@ -143,8 +143,7 @@ npm start -- --entry=entry_api.yml
       "description": "【非必填】API通道描述，一般情况需要说明一下",
       // 通道参数映射，参数命名规则：^[A-Za-z0-9_\-]+$，字段详见[parametersObject](https://www.asyncapi.com/docs/reference/specification/v2.6.0#parametersObject)
       "parameters": {
-        // 每个参数定义
-        "interId": "#/components/parameters/interId"
+        "$ref": "#/components/parameters/InterParameters"
       },
       // 定义应用发送到通道的数据（发送给客户端的消息定义），字段详见[operationObject](https://www.asyncapi.com/docs/reference/specification/v2.6.0#operationObject)
       "subscribe": {
@@ -167,17 +166,21 @@ npm start -- --entry=entry_api.yml
   "components": {
     // 定义parameter中可复用的对象
     "parameters": {
-      // 参数定义，每个参数下的字段详见[parameterObject](https://www.asyncapi.com/docs/reference/specification/v2.6.0#parameterObject)
-      "interId": {
-        "description": "参数描述",
-        "schema": {
-          "type": "string"
+      "InterParameters": {
+        // 参数定义，每个参数下的字段详见[parameterObject](https://www.asyncapi.com/docs/reference/specification/v2.6.0#parameterObject)
+        "interId": {
+          "description": "参数描述",
+          "schema": {
+            "type": "string"
+          }
         }
       },
-      "outerId": {
-        "description": "参数描述",
-        "schema": {
-          "type": "string"
+      "OuterParameters": {
+        "outerId": {
+          "description": "参数描述",
+          "schema": {
+            "type": "string"
+          }
         }
       }
     },
@@ -187,7 +190,7 @@ npm start -- --entry=entry_api.yml
         // 通道下的字段详见[channelItemObject](https://www.asyncapi.com/docs/reference/specification/v2.6.0#channelItemObject)
         "description": "【非必填】API通道描述，一般情况需要说明一下",
         "parameters": {
-          "outerId": "#/components/parameters/outerId"
+          "$ref": "#/components/parameters/OuterParameters"
         },
         "subscribe": {
           "message": {

@@ -12,7 +12,7 @@
   },
   "defaultContentType": "application/json",
   "channels": {
-    "/wsproxy/traffic/getTrackData": {
+    "/wsproxy/traffic/getTrackData/{interId}": {
       "description": "API描述",
       "parameters": {
         "interId": {
@@ -37,7 +37,7 @@
   "components": {
     "parameters": {
       "interId": {
-        "description": "参数描述",
+        "description": "interId参数描述",
         "schema": {
           "type": "string",
           "examples": ["abc"]

@@ -1,16 +1,19 @@
 import { renderData } from '../utils/index';
 import {
-  _wsproxy_traffic_getTrackData,
   _wsproxy_traffic_getTrackData_pub,
+  _wsproxy_traffic_getTrackData_sub,
 } from '../wsservices/channels/wsproxytrafficgettrackdata';
 
+/**
+ * 使用接口协议对接的ws请求封装调用，内置了channel path，但需要支持传url
+ */
 export default function () {
   // const url = "ws://127.0.0.1:3000/wsproxy/traffic/getTrackData?id=123";
 
   // 心跳
   let heartbeatTimer: any = null;
 
-  _wsproxy_traffic_getTrackData({
+  _wsproxy_traffic_getTrackData_sub({
     query: {
       id: 123,
     },

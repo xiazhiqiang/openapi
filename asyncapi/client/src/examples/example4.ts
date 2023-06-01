@@ -1,17 +1,25 @@
 import { renderData } from '../utils/index';
-import wsRequest from '../wsservices/index';
+import {
+  _wsproxy_traffic_getTrackData_pub,
+  _wsproxy_traffic_getTrackData_sub,
+} from '../wsservices/channels/wsproxytrafficgettrackdata';
+import { overrideWsRequest } from '../wsservices/index';
+
+overrideWsRequest(111);
 
 /**
- * 使用默认的ws请求封装调用
+ * 在example3的基础上，增加覆写默认内置默认ws请求实现
  */
 export default function () {
-  const url = 'ws://127.0.0.1:3000/wsproxy/traffic/getTrackData?id=123';
+  // const url = "ws://127.0.0.1:3000/wsproxy/traffic/getTrackData?id=123";
 
   // 心跳
   let heartbeatTimer: any = null;
 
-  wsRequest({
-    url,
+  _wsproxy_traffic_getTrackData_sub({
+    query: {
+      id: 123,
+    },
     onOpen: ({ ws }) => {
       const data = {
         frameInterval: 1500, // 数据更新间隔时间，单位ms
@@ -23,7 +31,9 @@ export default function () {
       }, 3000);
 
       // 发送必要数据
-      ws.send(JSON.stringify(data));
+      _wsproxy_traffic_getTrackData_pub({ ws, data });
+
+      // ws.send(JSON.stringify(data));
     },
     onMessage: ({ ws, msg, data }) => {
       // console.log("msg", msg);
