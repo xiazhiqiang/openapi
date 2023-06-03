@@ -145,11 +145,13 @@ function funTpl(opts = {}) {
  * This file was automatically generated.
  * DO NOT MODIFY IT BY HAND. Instead, run cli or script to regenerate.
  */
-import { IDefaultWsProps, IMessageProps } from "../typings";
+import { ${["IDefaultWsProps", opts.pubFunctions && "IMessageProps"]
+    .filter((i) => i)
+    .join(", ")} } from "../typings";
 import wsRequest from "./index";
-${opts.subFunctions || ""}
-${opts.pubFunctions || ""}
-${opts.typescriptDefinitions || ""}`;
+${[opts.subFunctions, opts.pubFunctions, opts.typescriptDefinitions]
+  .filter((i) => i)
+  .join("\n")}`;
 }
 
 function pubFunTpl(opts = {}) {
@@ -182,8 +184,12 @@ export function ${opts.funName}_sub<
   T extends IDefaultWsProps<${opts.IChannelBindingsQuery || "any"}, ${
     opts.IChannelParameters || "any"
   }, ${opts.IMessageSubscribeData || "any"}>
->(p: T) {
-  const pp = p?.parameters || {};
+>(p: T) {${
+    opts.path.indexOf("${") >= 0
+      ? `
+  const pp = p?.parameters || {};`
+      : ""
+  }
   return wsRequest({
     // 之所以在这里拼接path中的parameters，是因为要保证在path中顺序
     path: \`${opts.path}\`,
@@ -209,9 +215,8 @@ function copyTpl({ outputDir, templateDir }) {
   );
 }
 
-module.exports = async function () {
+module.exports = async function ({ asyncapiDocPath }) {
   try {
-    const asyncapiDocPath = path.join(__dirname, "asyncapiDoc", "ws.json");
     const apiContent = fse.readJsonSync(asyncapiDocPath);
 
     // 解析asyncapi 定义
