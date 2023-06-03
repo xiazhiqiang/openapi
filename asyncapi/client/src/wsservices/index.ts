@@ -25,7 +25,7 @@ export function defaultRequest({
       throw new Error('浏览器不支持！');
     }
 
-    // 额外url参数，则替换
+    // 若没有url参数，则拼接url
     if (!url) {
       if (!prefix) {
         // 若请求前缀为空，则修正为当前host+port的ws协议
@@ -34,13 +34,12 @@ export function defaultRequest({
         }`;
       }
       url = `${prefix}${path || ''}`;
+      url = formatUrl({ url, query });
     }
 
     if (!url) {
       throw new Error('websocket url 不能为空！');
     }
-
-    url = formatUrl({ url, query });
 
     // 回调参数
     const cbParams = { url, prefix, path, ...others };
@@ -83,25 +82,29 @@ export function formatUrl({ url, query }) {
     return url;
   }
 
-  const newParams =
-    Object.keys(query)
-      .map((key) => `${key}=${encodeURIComponent(query[key])}`)
-      .join('&') || '';
+  const paramsToUrlParamsString = (params = {}) => {
+    return (
+      Object.keys(params)
+        .map((key) => `${key}=${encodeURIComponent(params[key])}`)
+        .join('&') || ''
+    );
+  };
 
   const idx = url.indexOf('?');
   if (idx >= 0) {
-    const originUrlParams =
-      url
-        .substring(idx)
-        .split('&')
-        .filter((i) => i)
-        .join('&') || '';
-    url =
-      url.substring(0, idx) +
-      '?' +
-      [originUrlParams, newParams].filter((i) => i).join('&');
+    const originUrlParams = {};
+    url
+      .slice(idx + 1)
+      .split('&')
+      .filter((i) => i)
+      .forEach((i) => {
+        const p = i.split('=');
+        originUrlParams[p[0]] = p[1] || '';
+      });
+    const newParams = Object.assign({}, originUrlParams, query);
+    url = url.substring(0, idx) + '?' + paramsToUrlParamsString(newParams);
   } else {
-    url = `${url}?${newParams}`;
+    url = `${url}?${paramsToUrlParamsString(query)}`;
   }
 
   return url;

@@ -1,6 +1,9 @@
 /* eslint-disable */
 /* tslint:disable */
-
+/**
+ * This file was automatically generated.
+ * DO NOT MODIFY IT BY HAND. Instead, run cli or script to regenerate.
+ */
 import { IDefaultWsProps, IMessageProps } from '../typings';
 import wsRequest from './index';
 
@@ -9,11 +12,11 @@ import wsRequest from './index';
  * @param req 请求参数
  * @param extra 请求配置项
  */
-export function _wsproxy_traffic_getTrackData_sub<
+export function wsproxy_traffic_getTrackData_interId_sub<
   T extends IDefaultWsProps<
-    IChannelBindings_Query,
-    IParameters,
-    ISchemas_InterDataDTOObject
+    IChannelBindingsQuery,
+    IChannelParameters,
+    IMessageSubscribeData
   >,
 >(p: T) {
   const pp = p?.parameters || {};
@@ -28,8 +31,8 @@ export function _wsproxy_traffic_getTrackData_sub<
  * 客户端向服务端发送消息
  * @param {*} param0
  */
-export function _wsproxy_traffic_getTrackData_pub<
-  T extends IMessageProps<ISchemas_ReceiveDataDTOObject>,
+export function wsproxy_traffic_getTrackData_interId_pub<
+  T extends IMessageProps<IMessagePublishData>,
 >(p: T) {
   const { ws, data } = p;
   if (!ws || !ws.send) {
@@ -40,22 +43,26 @@ export function _wsproxy_traffic_getTrackData_pub<
   ws.send(JSON.stringify(data));
 }
 
-// TypeScript 类型定义
-interface IChannelBindings_Query {
+export interface IChannelBindingsQuery {
   id?: number;
+  [k: string]: any;
 }
 
-interface IParameters {
+export interface IChannelParameters {
   interId?: string;
+  [k: string]: any;
 }
 
-interface ISchemas_InterDataDTOObject {
+export interface IMessageSubscribeData {
   status?: boolean;
-  listObject2: {
+  listObject2?: {
     id?: string;
+    [k: string]: any;
   }[];
+  [k: string]: any;
 }
 
-interface ISchemas_ReceiveDataDTOObject {
-  frameInterval?: number | 1000;
+export interface IMessagePublishData {
+  frameInterval?: number;
+  [k: string]: any;
 }

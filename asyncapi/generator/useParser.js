@@ -46,7 +46,10 @@ async function generateChannels({ asyncapi = {}, outputDir }) {
   for (let i = 0; i < channelsName.length; i++) {
     const channelName = channelsName[i] || "";
     const channel = channels[channelName] || {};
-    const funName = channelName.replace(/\//g, "_").replace(/(\{|\})/g, "");
+    const funName = channelName
+      .replace(/^\//, "")
+      .replace(/\//g, "_")
+      .replace(/(\{|\})/g, "");
 
     const opts = {
       funName,
@@ -63,10 +66,10 @@ async function generateChannels({ asyncapi = {}, outputDir }) {
     if (channel.bindings?.ws?.query) {
       const ret = await compile(
         channel.bindings.ws.query,
-        "IChannelBindings_Query",
+        "IChannelBindingsQuery",
         jsonSchema2TypescriptOpts
       );
-      appendTypescriptDefinitions("IChannelBindings_Query", ret, opts);
+      appendTypescriptDefinitions("IChannelBindingsQuery", ret, opts);
     }
 
     if (channel.parameters) {
@@ -86,10 +89,10 @@ async function generateChannels({ asyncapi = {}, outputDir }) {
       if (channel.subscribe?.message?.payload) {
         const ret = await compile(
           channel.subscribe.message.payload,
-          "IMESSAGE_DATA_SUBSCRIBE",
+          "IMessageSubscribeData",
           jsonSchema2TypescriptOpts
         );
-        appendTypescriptDefinitions("IMESSAGE_DATA_SUBSCRIBE", ret, opts);
+        appendTypescriptDefinitions("IMessageSubscribeData", ret, opts);
       }
 
       opts.subFunctions = subFunTpl({
@@ -102,10 +105,10 @@ async function generateChannels({ asyncapi = {}, outputDir }) {
       if (channel.publish?.message?.payload) {
         const ret = await compile(
           channel.publish.message.payload,
-          "IMESSAGE_DATA_PUBLISH",
+          "IMessagePublishData",
           jsonSchema2TypescriptOpts
         );
-        appendTypescriptDefinitions("IMESSAGE_DATA_PUBLISH", ret, opts);
+        appendTypescriptDefinitions("IMessagePublishData", ret, opts);
       }
 
       opts.pubFunctions = pubFunTpl(opts);
@@ -156,7 +159,7 @@ function pubFunTpl(opts = {}) {
  * @param {*} param0
  */
 export function ${opts.funName}_pub<
-  T extends IMessageProps<${opts.IMESSAGE_DATA_PUBLISH || "any"}>
+  T extends IMessageProps<${opts.IMessagePublishData || "any"}>
 >(p: T) {
   const { ws, data } = p;
   if (!ws || !ws.send) {
@@ -176,9 +179,9 @@ function subFunTpl(opts = {}) {
  * @param extra 请求配置项
  */
 export function ${opts.funName}_sub<
-  T extends IDefaultWsProps<${opts.IChannelBindings_Query || "any"}, ${
+  T extends IDefaultWsProps<${opts.IChannelBindingsQuery || "any"}, ${
     opts.IChannelParameters || "any"
-  }, ${opts.IMESSAGE_DATA_SUBSCRIBE || "any"}>
+  }, ${opts.IMessageSubscribeData || "any"}>
 >(p: T) {
   const pp = p?.parameters || {};
   return wsRequest({

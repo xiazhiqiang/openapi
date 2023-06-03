@@ -1,7 +1,7 @@
 import { renderData } from '../utils/index';
 import {
-  _wsproxy_traffic_getTrackData_pub,
-  _wsproxy_traffic_getTrackData_sub,
+  wsproxy_traffic_getTrackData_interId_pub,
+  wsproxy_traffic_getTrackData_interId_sub,
 } from '../wsservices/channels/wsproxytrafficgettrackdata';
 import { overrideWsRequest } from '../wsservices/index';
 
@@ -16,7 +16,7 @@ export default function () {
   // 心跳
   let heartbeatTimer: any = null;
 
-  _wsproxy_traffic_getTrackData_sub({
+  wsproxy_traffic_getTrackData_interId_sub({
     query: {
       id: 123,
     },
@@ -31,7 +31,7 @@ export default function () {
       }, 3000);
 
       // 发送必要数据
-      _wsproxy_traffic_getTrackData_pub({ ws, data });
+      wsproxy_traffic_getTrackData_interId_pub({ ws, data });
 
       // ws.send(JSON.stringify(data));
     },
