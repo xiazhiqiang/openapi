@@ -1,0 +1,19 @@
+{
+  "name": "data",
+  "version": "1.0.0",
+  "description": "yaml转换json",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Miles",
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^11.1.1",
+    "js-yaml": "^4.1.0",
+    "minimist": "^1.2.8"
+  },
+  "devDependencies": {}
+}
