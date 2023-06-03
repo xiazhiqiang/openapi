@@ -5,6 +5,7 @@ const {
   usesNewAPI,
   getProperApiDocument,
 } = require("@asyncapi/generator/lib/parser");
+const { compile } = require("json-schema-to-typescript");
 
 async function parseApiDoc({ apiContent }) {
   try {
@@ -32,28 +33,82 @@ async function parseApiDoc({ apiContent }) {
 async function generateChannels({ asyncapi = {}, outputDir }) {
   let { channels, messages } = asyncapi || {};
 
+  const appendTypescriptDefinitions = (typeName, content, opts) => {
+    if (content && typeName) {
+      opts[typeName] = typeName;
+      opts.typescriptDefinitions += "\n" + content;
+    }
+    return opts;
+  };
+
   // 按照channel遍历生成channel文件
   const channelsName = Object.keys(channels);
   for (let i = 0; i < channelsName.length; i++) {
     const channelName = channelsName[i] || "";
     const channel = channels[channelName] || {};
-
-    const opts = {};
     const funName = channelName.replace(/\//g, "_").replace(/(\{|\})/g, "");
 
+    const opts = {
+      funName,
+      channelName,
+      subFunctions: "",
+      pubFunctions: "",
+      typescriptDefinitions: "",
+    };
+    const jsonSchema2TypescriptOpts = {
+      bannerComment: "",
+      unknownAny: false,
+    };
+
+    if (channel.bindings?.ws?.query) {
+      const ret = await compile(
+        channel.bindings.ws.query,
+        "IChannelBindings_Query",
+        jsonSchema2TypescriptOpts
+      );
+      appendTypescriptDefinitions("IChannelBindings_Query", ret, opts);
+    }
+
+    if (channel.parameters) {
+      const parametersSchema = { type: "object", properties: {} };
+      Object.keys(channel.parameters).forEach((i) => {
+        parametersSchema.properties[i] = channel.parameters[i].schema;
+      });
+      const ret = await compile(
+        parametersSchema,
+        "IChannelParameters",
+        jsonSchema2TypescriptOpts
+      );
+      appendTypescriptDefinitions("IChannelParameters", ret, opts);
+    }
+
     if (channel.subscribe) {
+      if (channel.subscribe?.message?.payload) {
+        const ret = await compile(
+          channel.subscribe.message.payload,
+          "IMESSAGE_DATA_SUBSCRIBE",
+          jsonSchema2TypescriptOpts
+        );
+        appendTypescriptDefinitions("IMESSAGE_DATA_SUBSCRIBE", ret, opts);
+      }
+
       opts.subFunctions = subFunTpl({
-        funName,
-        channelName,
+        ...opts,
         path: channelName.replace(/{/g, "${pp.").replace(/}/g, " || ''}"),
       });
     }
 
     if (channel.publish) {
-      opts.pubFunctions = pubFunTpl({
-        funName,
-        channelName,
-      });
+      if (channel.publish?.message?.payload) {
+        const ret = await compile(
+          channel.publish.message.payload,
+          "IMESSAGE_DATA_PUBLISH",
+          jsonSchema2TypescriptOpts
+        );
+        appendTypescriptDefinitions("IMESSAGE_DATA_PUBLISH", ret, opts);
+      }
+
+      opts.pubFunctions = pubFunTpl(opts);
     }
 
     let fileContent = funTpl(opts);
@@ -81,17 +136,17 @@ async function generateChannels({ asyncapi = {}, outputDir }) {
 }
 
 function funTpl(opts = {}) {
-  return `
-/* eslint-disable */
+  return `/* eslint-disable */
 /* tslint:disable */
-
+/** 
+ * This file was automatically generated.
+ * DO NOT MODIFY IT BY HAND. Instead, run cli or script to regenerate.
+ */
 import { IDefaultWsProps, IMessageProps } from "../typings";
 import wsRequest from "./index";
-
 ${opts.subFunctions || ""}
 ${opts.pubFunctions || ""}
-${opts.typescriptDefinitions || ""}
-`;
+${opts.typescriptDefinitions || ""}`;
 }
 
 function pubFunTpl(opts = {}) {
@@ -101,7 +156,7 @@ function pubFunTpl(opts = {}) {
  * @param {*} param0
  */
 export function ${opts.funName}_pub<
-  T extends IMessageProps<ISchemas_ReceiveDataDTOObject>
+  T extends IMessageProps<${opts.IMESSAGE_DATA_PUBLISH || "any"}>
 >(p: T) {
   const { ws, data } = p;
   if (!ws || !ws.send) {
@@ -110,8 +165,7 @@ export function ${opts.funName}_pub<
 
   // 向服务端应用发送消息
   ws.send(JSON.stringify(data));
-}
-`;
+}`;
 }
 
 function subFunTpl(opts = {}) {
@@ -122,11 +176,9 @@ function subFunTpl(opts = {}) {
  * @param extra 请求配置项
  */
 export function ${opts.funName}_sub<
-  T extends IDefaultWsProps<
-    IChannelBindings_Query,
-    IParameters,
-    ISchemas_InterDataDTOObject
-  >
+  T extends IDefaultWsProps<${opts.IChannelBindings_Query || "any"}, ${
+    opts.IChannelParameters || "any"
+  }, ${opts.IMESSAGE_DATA_SUBSCRIBE || "any"}>
 >(p: T) {
   const pp = p?.parameters || {};
   return wsRequest({
@@ -134,8 +186,7 @@ export function ${opts.funName}_sub<
     path: \`${opts.path}\`,
     ...p,
   });
-}
-`;
+}`;
 }
 
 function copyTpl({ outputDir, templateDir }) {

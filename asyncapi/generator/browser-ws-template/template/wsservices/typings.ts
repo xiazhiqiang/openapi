@@ -1,4 +1,4 @@
-export interface IDefaultWsProps<QUERY, PARAMETERS, MSG_DATA> {
+export interface IDefaultWsProps<QUERY, PARAMETERS, MESSAGE_DATA> {
   prefix?: string;
   url?: string;
   path?: string;
@@ -8,7 +8,7 @@ export interface IDefaultWsProps<QUERY, PARAMETERS, MSG_DATA> {
   onOpen?: (p: IOnOpenProps) => void;
   onError?: (p: IOnErrorProps) => void;
   onClose?: (p: IOnCloseProps) => void;
-  onMessage?: (p: IMessageProps<MSG_DATA>) => void;
+  onMessage?: (p: IMessageProps<MESSAGE_DATA>) => void;
 }
 
 export interface IOnOpenProps {
@@ -28,10 +28,10 @@ export interface IOnCloseProps {
   [k: string]: any;
 }
 
-export interface IMessageProps<DATA> {
+export interface IMessageProps<MESSAGE_DATA> {
   ws?: any;
-  data?: DATA;
+  data?: MESSAGE_DATA;
   msg?: {
-    data?: DATA;
+    data?: MESSAGE_DATA;
   };
 }
