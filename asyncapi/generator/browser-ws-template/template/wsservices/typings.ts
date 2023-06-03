@@ -34,4 +34,5 @@ export interface IMessageProps<MESSAGE_DATA> {
   msg?: {
     data?: MESSAGE_DATA;
   };
+  [k: string]: any;
 }
