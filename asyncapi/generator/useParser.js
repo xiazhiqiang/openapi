@@ -61,6 +61,15 @@ async function generateChannels({ asyncapi = {}, outputDir }) {
     const jsonSchema2TypescriptOpts = {
       bannerComment: "",
       unknownAny: false,
+      style: {
+        semi: true,
+        printWidth: 80,
+        tabWidth: 2,
+        singleQuote: false,
+        trailingComma: "all",
+        bracketSpacing: true,
+        proseWrap: "never",
+      },
     };
 
     if (channel.bindings?.ws?.query) {

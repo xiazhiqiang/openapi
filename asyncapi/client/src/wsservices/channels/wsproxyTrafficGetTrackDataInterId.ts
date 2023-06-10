@@ -4,8 +4,8 @@
  * This file was automatically generated.
  * DO NOT MODIFY IT BY HAND. Instead, run cli or script to regenerate.
  */
-import { IDefaultWsProps, IMessageProps } from '../typings';
-import wsRequest from './index';
+import { IDefaultWsProps, IMessageProps } from "../typings";
+import wsRequest from "./index";
 
 /**
  * 建立ws请求连接，通过解析协议中的channel
@@ -22,7 +22,7 @@ export function wsproxy_traffic_getTrackData_interId_sub<
   const pp = p?.parameters || {};
   return wsRequest({
     // 之所以在这里拼接path中的parameters，是因为要保证在path中顺序
-    path: `/wsproxy/traffic/getTrackData/${pp.interId || ''}`,
+    path: `/wsproxy/traffic/getTrackData/${pp.interId || ""}`,
     ...p,
   });
 }
