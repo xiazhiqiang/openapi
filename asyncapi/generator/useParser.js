@@ -7,10 +7,10 @@ const {
 } = require("@asyncapi/generator/lib/parser");
 const { compile } = require("json-schema-to-typescript");
 
-async function parseApiDoc({ apiContent }) {
+async function parseApiDoc({ apiDocJson }) {
   try {
     // 解析asyncapi doc
-    let { document: asyncapiDocument, diagnostics } = await parse(apiContent);
+    let { document: asyncapiDocument, diagnostics } = await parse(apiDocJson);
     if (!asyncapiDocument) {
       const err = new Error(
         "Input is not a corrent AsyncAPI document so it cannot be processed."
@@ -215,17 +215,30 @@ function copyTpl({ outputDir, templateDir }) {
   );
 }
 
-module.exports = async function ({ asyncapiDocPath }) {
+function emptyDir(filePath) {
+  const files = fse.readdirSync(filePath); //读取该文件夹
+  files.forEach((file) => {
+    const nextFilePath = `${filePath}/${file}`;
+    const states = fse.statSync(nextFilePath);
+    if (states.isDirectory()) {
+      emptyDir(nextFilePath);
+    } else {
+      fse.unlinkSync(nextFilePath);
+      console.log(`删除文件 ${nextFilePath} 成功`);
+    }
+  });
+}
+
+module.exports = async function ({ asyncapiDocPath, outputDir }) {
   try {
-    const apiContent = fse.readJsonSync(asyncapiDocPath);
+    const apiDocJson = fse.readJsonSync(asyncapiDocPath);
 
     // 解析asyncapi 定义
-    const asyncapi = await parseApiDoc({ apiContent });
+    const asyncapi = await parseApiDoc({ apiDocJson });
     if (!asyncapi) {
       return;
     }
 
-    const outputDir = path.join(__dirname, "output", "wsservices");
     const templateDir = path.join(
       __dirname,
       "browser-ws-template",
@@ -235,7 +248,7 @@ module.exports = async function ({ asyncapiDocPath }) {
 
     // 确保输出目录为空
     if (fse.existsSync(outputDir)) {
-      fse.unlinkSync(outputDir);
+      emptyDir(outputDir);
     }
     fse.ensureDirSync(outputDir);
 

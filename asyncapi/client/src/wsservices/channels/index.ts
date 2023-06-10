@@ -1,10 +1,3 @@
-/* eslint-disable */
-/* tslint:disable */
-
-/**
- * 所有Channel请求，这一层是为了做内部通用处理
- */
-
 import wsRequest from '../index';
 
 // websocket请求服务

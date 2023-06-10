@@ -2,37 +2,39 @@ import { renderData } from '../utils/index';
 import {
   wsproxy_traffic_getTrackData_interId_pub,
   wsproxy_traffic_getTrackData_interId_sub,
-} from '../wsservices/channels/wsproxytrafficgettrackdata';
-import { overwriteWsRequest } from '../wsservices/index';
+} from '../wsservices/channels/wsproxyTrafficGetTrackDataInterId';
+import { DefaultWsRequestClass, overwriteWsClass } from '../wsservices/index';
 
-// 覆写ws请求
-overwriteWsRequest({
-  overwriteWsOnOpen: (_wsOnOpen) => {
-    return (p, handlerShareOpts = {}) => {
+overwriteWsClass(
+  class WsRequest extends DefaultWsRequestClass {
+    heartbeatTimer;
+
+    constructor(props) {
+      super(props);
+      this.heartbeatTimer = null;
+    }
+
+    openHandler(onOpen, p) {
       let { ws } = p || {};
       // 心跳
-      handlerShareOpts.heartbeatTimer = null;
+      this.heartbeatTimer = null;
 
       // 定时发送心跳请求
-      handlerShareOpts.heartbeatTimer = setInterval(() => {
-        ws.send(
-          JSON.stringify({ msg: '心跳数据', query: p.query, handlerShareOpts }),
-        );
+      this.heartbeatTimer = setInterval(() => {
+        ws.send(JSON.stringify({ msg: '心跳数据', query: p.query }));
       }, 3000);
 
-      _wsOnOpen(p);
-    };
-  },
-  overwriteWsOnClose: (_wsOnClose) => {
-    return (p, handlerShareOpts = {}) => {
-      _wsOnClose(p);
+      onOpen(p);
+    }
+
+    closeHandler(onClose, p) {
+      onClose(p);
 
       // 停止心跳
-      handlerShareOpts.heartbeatTimer &&
-        clearInterval(handlerShareOpts.heartbeatTimer);
-    };
+      this.heartbeatTimer && clearInterval(this.heartbeatTimer);
+    }
   },
-});
+);
 
 /**
  * 在example3的基础上，增加覆写默认内置默认ws请求实现
