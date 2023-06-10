@@ -4,13 +4,12 @@ const Generator = require("@asyncapi/generator/lib/generator");
 /**
  * 通过generator及模板方式，只能做到逐个解析channel、message等，不能灵活获取变量
  */
-module.exports = function ({ asyncapiDocPath }) {
+module.exports = function ({ asyncapiDocPath, outputDir }) {
   const templateDir = path.join(__dirname, "browser-ws-template");
-  const targetDir = path.join(__dirname, "output");
 
   (async () => {
     try {
-      const generator = new Generator(templateDir, targetDir, {
+      const generator = new Generator(templateDir, outputDir, {
         templateParams: {},
         noOverwriteGlobs: [],
         disabledHooks: {},
