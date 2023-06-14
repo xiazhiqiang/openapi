@@ -17,12 +17,15 @@ npm uninstall husky
 rm -rf .husky && git config --unset core.hooksPath
 ```
 
-- 在 package.json 中配置 scripts 添加属性
+- 在 package.json 中添加 husky 及 commitlint 配置
 
 ```json
 {
   "scripts": {
     "prepare": "husky install"
+  },
+  "commitlint": {
+    "extends": ["@commitlint/config-conventional"]
   }
 }
 ```
