@@ -8,9 +8,9 @@ import {
 
 export class DefaultWsRequestClass {
   options: IDefaultWsProps<any, any, any>;
-  ws;
+  ws: any;
 
-  constructor(props) {
+  constructor(props: IDefaultWsProps<any, any, any>) {
     this.options = props;
 
     if ("WebSocket" in window) {
@@ -36,15 +36,15 @@ export class DefaultWsRequestClass {
         typeof onOpen === "function" &&
           this.openHandler(onOpen, { ...params, ws: this.ws });
       };
-      this.ws.onmessage = (msg) => {
+      this.ws.onmessage = (msg: any) => {
         typeof onMessage === "function" &&
           this.messageHandler(onMessage, { ...params, msg, ws: this.ws });
       };
-      this.ws.onerror = (error) => {
+      this.ws.onerror = (error: any) => {
         typeof onError === "function" &&
           this.errorHandler(onError, { ...params, error, ws: this.ws });
       };
-      this.ws.onclose = (event) => {
+      this.ws.onclose = (event: any) => {
         typeof onClose === "function" &&
           this.closeHandler(onClose, { ...params, event, ws: this.ws });
       };
@@ -103,7 +103,7 @@ export class DefaultWsRequestClass {
       return url;
     }
 
-    const paramsToUrlParamsString = (params = {}) => {
+    const paramsToUrlParamsString = (params: any = {}) => {
       return (
         Object.keys(params)
           .map((key) => `${key}=${encodeURIComponent(params[key])}`)
@@ -113,12 +113,12 @@ export class DefaultWsRequestClass {
 
     const idx = url.indexOf("?");
     if (idx >= 0) {
-      const originUrlParams = {};
+      const originUrlParams: any = {};
       url
         .slice(idx + 1)
         .split("&")
-        .filter((i) => i)
-        .forEach((i) => {
+        .filter((i: string) => i)
+        .forEach((i: string) => {
           const p = i.split("=");
           originUrlParams[p[0]] = p[1] || "";
         });
@@ -140,7 +140,7 @@ export const overwriteWsClass = (WsClass: any) => {
   _WsClass = WsClass;
 };
 
-export default (p) => {
+export default (p: any) => {
   try {
     return new _WsClass(p);
   } catch (err) {
