@@ -1,16 +1,16 @@
 import {
   IDefaultWsProps,
-  IMessageProps,
-  IOnCloseProps,
-  IOnErrorProps,
-  IOnOpenProps,
+  IWsOnOpen,
+  IWsOnClose,
+  IWsOnMessage,
+  IWsOnError
 } from "./typings";
 
 export class DefaultWsRequestClass {
   options: IDefaultWsProps<any, any, any>;
-  ws;
+  ws: any;
 
-  constructor(props) {
+  constructor(props: IDefaultWsProps<any, any, any>) {
     this.options = props;
 
     if ("WebSocket" in window) {
@@ -36,15 +36,15 @@ export class DefaultWsRequestClass {
         typeof onOpen === "function" &&
           this.openHandler(onOpen, { ...params, ws: this.ws });
       };
-      this.ws.onmessage = (msg) => {
+      this.ws.onmessage = (msg: any) => {
         typeof onMessage === "function" &&
           this.messageHandler(onMessage, { ...params, msg, ws: this.ws });
       };
-      this.ws.onerror = (error) => {
+      this.ws.onerror = (error: any) => {
         typeof onError === "function" &&
           this.errorHandler(onError, { ...params, error, ws: this.ws });
       };
-      this.ws.onclose = (event) => {
+      this.ws.onclose = (event: any) => {
         typeof onClose === "function" &&
           this.closeHandler(onClose, { ...params, event, ws: this.ws });
       };
@@ -117,8 +117,8 @@ export class DefaultWsRequestClass {
       url
         .slice(idx + 1)
         .split("&")
-        .filter((i) => i)
-        .forEach((i) => {
+        .filter((i: any) => i)
+        .forEach((i: string) => {
           const p = i.split("=");
           originUrlParams[p[0]] = p[1] || "";
         });
@@ -147,21 +147,3 @@ export default (p) => {
     return null;
   }
 };
-
-// ----------------------------类型定义------------------------------------
-
-export interface IWsOnOpen {
-  (p: IDefaultWsProps<any, any, any> & IOnOpenProps): any;
-}
-
-export interface IWsOnClose {
-  (p: IDefaultWsProps<any, any, any> & IOnCloseProps): any;
-}
-
-export interface IWsOnError {
-  (p: IDefaultWsProps<any, any, any> & IOnErrorProps): any;
-}
-
-export interface IWsOnMessage {
-  (p: IDefaultWsProps<any, any, any> & IMessageProps<any>): any;
-}
