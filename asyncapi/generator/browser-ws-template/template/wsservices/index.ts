@@ -1,9 +1,9 @@
 import {
   IDefaultWsProps,
-  IMessageProps,
-  IOnCloseProps,
-  IOnErrorProps,
-  IOnOpenProps,
+  IWsOnOpen,
+  IWsOnClose,
+  IWsOnMessage,
+  IWsOnError,
 } from "./typings";
 
 export class DefaultWsRequestClass {
@@ -103,7 +103,7 @@ export class DefaultWsRequestClass {
       return url;
     }
 
-    const paramsToUrlParamsString = (params: any = {}) => {
+    const paramsToUrlParamsString = (params = {}) => {
       return (
         Object.keys(params)
           .map((key) => `${key}=${encodeURIComponent(params[key])}`)
@@ -113,11 +113,11 @@ export class DefaultWsRequestClass {
 
     const idx = url.indexOf("?");
     if (idx >= 0) {
-      const originUrlParams: any = {};
+      const originUrlParams = {};
       url
         .slice(idx + 1)
         .split("&")
-        .filter((i: string) => i)
+        .filter((i: any) => i)
         .forEach((i: string) => {
           const p = i.split("=");
           originUrlParams[p[0]] = p[1] || "";
@@ -140,28 +140,10 @@ export const overwriteWsClass = (WsClass: any) => {
   _WsClass = WsClass;
 };
 
-export default (p: any) => {
+export default (p) => {
   try {
     return new _WsClass(p);
   } catch (err) {
     return null;
   }
 };
-
-// ----------------------------类型定义------------------------------------
-
-export interface IWsOnOpen {
-  (p: IDefaultWsProps<any, any, any> & IOnOpenProps): any;
-}
-
-export interface IWsOnClose {
-  (p: IDefaultWsProps<any, any, any> & IOnCloseProps): any;
-}
-
-export interface IWsOnError {
-  (p: IDefaultWsProps<any, any, any> & IOnErrorProps): any;
-}
-
-export interface IWsOnMessage {
-  (p: IDefaultWsProps<any, any, any> & IMessageProps<any>): any;
-}
