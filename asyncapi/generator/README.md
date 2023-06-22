@@ -14,9 +14,6 @@ cnpm i
 # follow 官网示例
 npm run build:examples
 
-# 【Deprecated】使用nunjucks模板，该方式不够灵活，无法满足诉求，不推荐
-npm run build:local -- --mode nunjucks
-
 # 利用asyncapi generator中的parse，解析apiDoc，灵活生成ws请求代码
 npm run build:local
 ```

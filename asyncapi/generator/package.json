@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build:local": "rm -rf output && node index.js",
+    "build:local": "rm -rf output && node index.js --apidoc ./asyncapiDoc/ws.json --output ./output/wsservices",
     "build:example": "rm -rf output && ag ./asyncapiDoc/example.yml @asyncapi/nodejs-ws-template -o output -p server=localhost --force-write",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

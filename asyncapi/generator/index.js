@@ -1,5 +1,7 @@
 const path = require("path");
+const fse = require("fs-extra");
 
+const cwd = process.cwd();
 const args = process.argv.slice(2);
 const options = {};
 
@@ -16,18 +18,23 @@ for (let i = 0; i < args.length; i++) {
   }
 }
 
-const asyncapiDocPath = path.join(
-  __dirname,
-  "asyncapiDoc",
-  options.apidoc || "ws.json"
-);
+const asyncapiDocPath = path.join(cwd, options.apidoc);
+if (!options.output || !options.apidoc) {
+  console.error("缺少必要参数：apidoc或output");
+  return;
+}
+if (!fse.existsSync(asyncapiDocPath)) {
+  console.error("未找到api定义文件或缺少api文件路径参数apidoc");
+  return;
+}
+const outputDir = path.join(cwd, options.output);
 
 if (options.mode === "nunjucks") {
   //通过nunjucks模板生成service示例
   const useNunjucks = require("./useNunjucks");
-  useNunjucks({ asyncapiDocPath });
+  useNunjucks({ asyncapiDocPath, outputDir });
 } else {
   // 通过parser解析asyncapi doc文件动态生成services
   const useParser = require("./useParser");
-  useParser({ asyncapiDocPath });
+  useParser({ asyncapiDocPath, outputDir });
 }

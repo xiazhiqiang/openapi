@@ -2,74 +2,23 @@
 
 基于 asynapi2.x，定义 websocket 服务及前端请求 Demo。
 
-### server
+## 目录说明
 
-- 初始化项目
+- client: websocket 浏览器客户端实现
+- data: async api 协议 json<=>yaml 转换工具
+- generator：基于 async api 协议（json）生成 wsservices 前端 client 代码
+- server: websocket nodejs 服务实现
 
-```shell
-cd asyncapi/server
-npx express-generator --view=ejs
-```
-
-- 添加 websocket 服务
+## 本地启动
 
 ```shell
-cnpm i express-ws -S
+# 启动websocket server
+cd asyncapi/server && npm run dev
+
+# 启动websocket client
+cd asyncapi/client && npm run dev
 ```
 
-```javascript
-// bin/www
-/**
- * Create Websocket server
- */
-require("express-ws")(app, server);
-```
+## 参考
 
-```javascript
-// routes/wsproxy.js
-var express = require("express");
-var expressWs = require("express-ws"); // 引入ws中间件
-var router = express.Router();
-
-expressWs(router); // ws中间件应用到路由中
-
-router.ws("/path", function (ws, req) {
-  ws.on("connection", function (e) {
-    console.log("connection", e);
-  });
-
-  ws.on("message", function (msg) {
-    let params = {};
-    try {
-      params = JSON.parse(msg);
-    } catch (e) {}
-
-    // todo 根据参数实时推送消息
-    // ws.send();
-  });
-
-  ws.on("close", function (id) {
-    console.log("close", id);
-  });
-});
-
-module.exports = router;
-```
-
-- 本地启动
-
-> 默认端口号 3000，可配置 PORT=xxx nodemon ./bin/www
-
-```json
-// package.json
-{
-  "scripts": {
-    "dev": "nodemon ./bin/www"
-  }
-}
-```
-
-```shell
-# 通过nodemon监听server修改重新启动服务
-npm run dev
-```
+- [AsyncApi 2.6.0](https://www.asyncapi.com/docs/reference/specification/v2.6.0)
