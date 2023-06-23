@@ -1,31 +1,38 @@
 {
-  "name": "openapi-service",
+  "name": "openapi",
   "version": "1.0.0",
+  "private": true,
   "description": "openapi",
-  "main": "index.js",
+  "keywords": [],
+  "homepage": "https://github.com/xiazhiqiang/openapi#readme",
+  "bugs": {
+    "url": "https://github.com/xiazhiqiang/openapi/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiazhiqiang/openapi.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "workspaces": [
+    "asyncapi/*"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky install"
+    "bootstrap": "yarn install --ignore-engines",
+    "build": "lerna run build --stream --sort",
+    "clean": "./cleanup.sh",
+    "prepare": "husky install",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
     ]
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/xiazhiqiang/openapi-service.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/xiazhiqiang/openapi-service/issues"
-  },
-  "homepage": "https://github.com/xiazhiqiang/openapi-service#readme",
   "devDependencies": {
     "@commitlint/cli": "^17.6.3",
     "@commitlint/config-conventional": "^17.6.3",
-    "husky": "^8.0.3"
+    "husky": "^8.0.3",
+    "lerna": "^6.0.0"
   }
 }
