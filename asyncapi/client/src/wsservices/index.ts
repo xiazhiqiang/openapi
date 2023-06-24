@@ -1,29 +1,26 @@
 import {
   IDefaultWsProps,
-  IMessageProps,
-  IOnCloseProps,
-  IOnErrorProps,
-  IOnOpenProps,
+  IWsOnClose,
+  IWsOnError,
+  IWsOnMessage,
+  IWsOnOpen,
 } from "./typings";
 
 export class DefaultWsRequestClass {
   options: IDefaultWsProps<any, any, any>;
-  ws;
+  ws: any;
 
-  constructor(props) {
+  constructor(props: IDefaultWsProps<any, any, any>) {
     this.options = props;
-
-    if ("WebSocket" in window) {
-      this.init();
-    } else {
-      throw new Error("浏览器不支持！");
-    }
-
-    return this.ws;
+    this.init();
   }
 
   init() {
     try {
+      if (!("WebSocket" in window)) {
+        throw new Error("浏览器不支持 WebSocket！");
+      }
+
       const { onOpen, onError, onClose, onMessage, ...otherOptions } =
         this.options;
       const params = this.processOptions(otherOptions);
@@ -36,15 +33,15 @@ export class DefaultWsRequestClass {
         typeof onOpen === "function" &&
           this.openHandler(onOpen, { ...params, ws: this.ws });
       };
-      this.ws.onmessage = (msg) => {
+      this.ws.onmessage = (msg: any) => {
         typeof onMessage === "function" &&
           this.messageHandler(onMessage, { ...params, msg, ws: this.ws });
       };
-      this.ws.onerror = (error) => {
+      this.ws.onerror = (error: any) => {
         typeof onError === "function" &&
           this.errorHandler(onError, { ...params, error, ws: this.ws });
       };
-      this.ws.onclose = (event) => {
+      this.ws.onclose = (event: any) => {
         typeof onClose === "function" &&
           this.closeHandler(onClose, { ...params, event, ws: this.ws });
       };
@@ -79,7 +76,7 @@ export class DefaultWsRequestClass {
   }
 
   processOptions(
-    options: IDefaultWsProps<any, any, any>
+    options: IDefaultWsProps<any, any, any>,
   ): IDefaultWsProps<any, any, any> {
     let { prefix = "", url, path = "", query } = options || {};
 
@@ -103,7 +100,7 @@ export class DefaultWsRequestClass {
       return url;
     }
 
-    const paramsToUrlParamsString = (params = {}) => {
+    const paramsToUrlParamsString = (params: any = {}) => {
       return (
         Object.keys(params)
           .map((key) => `${key}=${encodeURIComponent(params[key])}`)
@@ -113,12 +110,12 @@ export class DefaultWsRequestClass {
 
     const idx = url.indexOf("?");
     if (idx >= 0) {
-      const originUrlParams = {};
+      const originUrlParams: any = {};
       url
         .slice(idx + 1)
         .split("&")
-        .filter((i) => i)
-        .forEach((i) => {
+        .filter((i: string) => i)
+        .forEach((i: string) => {
           const p = i.split("=");
           originUrlParams[p[0]] = p[1] || "";
         });
@@ -130,6 +127,29 @@ export class DefaultWsRequestClass {
 
     return url;
   }
+
+  start() {
+    this.close();
+    this.init();
+  }
+
+  close() {
+    this.ws && this.ws.close();
+  }
+
+  message(message: any) {
+    if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+      console.error("数据发送失败！");
+      return;
+    }
+    const msg = JSON.stringify(message);
+    this.ws.send(msg);
+  }
+
+  destroy() {
+    this.close();
+    this.ws = null;
+  }
 }
 
 // 内部ws类
@@ -140,28 +160,6 @@ export const overwriteWsClass = (WsClass: any) => {
   _WsClass = WsClass;
 };
 
-export default (p) => {
-  try {
-    return new _WsClass(p);
-  } catch (err) {
-    return null;
-  }
+export default (p: any) => {
+  return new _WsClass(p);
 };
-
-// ----------------------------类型定义------------------------------------
-
-export interface IWsOnOpen {
-  (p: IDefaultWsProps<any, any, any> & IOnOpenProps): any;
-}
-
-export interface IWsOnClose {
-  (p: IDefaultWsProps<any, any, any> & IOnCloseProps): any;
-}
-
-export interface IWsOnError {
-  (p: IDefaultWsProps<any, any, any> & IOnErrorProps): any;
-}
-
-export interface IWsOnMessage {
-  (p: IDefaultWsProps<any, any, any> & IMessageProps<any>): any;
-}

@@ -36,3 +36,19 @@ export interface IMessageProps<MESSAGE_DATA> {
   };
   [k: string]: any;
 }
+
+export interface IWsOnOpen {
+  (p: IDefaultWsProps<any, any, any> & IOnOpenProps): any;
+}
+
+export interface IWsOnClose {
+  (p: IDefaultWsProps<any, any, any> & IOnCloseProps): any;
+}
+
+export interface IWsOnError {
+  (p: IDefaultWsProps<any, any, any> & IOnErrorProps): any;
+}
+
+export interface IWsOnMessage {
+  (p: IDefaultWsProps<any, any, any> & IMessageProps<any>): any;
+}
