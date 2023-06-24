@@ -30,6 +30,12 @@ rm -rf .husky && git config --unset core.hooksPath
 }
 ```
 
+- 初始化
+
+```shell
+npx husky install
+```
+
 - 添加提交校验
 
 ```shell
@@ -38,4 +44,5 @@ npx husky add .husky/commit-msg 'npx --no -- commitlint --edit ${1}'
 
 ## 参考
 
+- [husky 官网配置](https://typicode.github.io/husky/getting-started.html)
 - [husky 配置](https://blog.qbb.sh/post/2022/01/11/husky/)
