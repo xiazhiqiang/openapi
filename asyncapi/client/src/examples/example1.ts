@@ -1,10 +1,10 @@
-import { renderData } from '../utils/index';
+import { renderData } from "../utils/index";
 
 /**
  * 简单Demo
  */
 export default () => {
-  const url = 'ws://127.0.0.1:3000/wsproxy/traffic/getTrackData?id=123';
+  const url = "ws://127.0.0.1:3000/wsproxy/traffic/getTrackData?id=123";
   const ws = new WebSocket(url);
 
   let heartbeatTimer: any = null;
@@ -18,12 +18,12 @@ export default () => {
 
     // 定时发送心跳请求
     heartbeatTimer = setInterval(() => {
-      ws.send(JSON.stringify({ msg: '心跳数据' }));
+      ws.send(JSON.stringify({ msg: "心跳数据" }));
     }, 3000);
   };
 
   ws.onerror = (error) => {
-    console.log('error', error);
+    console.log("error", error);
   };
 
   ws.onmessage = (e) => {
@@ -32,8 +32,10 @@ export default () => {
   };
 
   ws.onclose = (event) => {
-    console.log('close', event);
-    renderData('close connection');
-    heartbeatTimer && clearInterval(heartbeatTimer);
+    console.log("close", event);
+    renderData("close connection");
+    if (heartbeatTimer) {
+      clearInterval(heartbeatTimer);
+    }
   };
 };
