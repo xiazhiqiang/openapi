@@ -1,7 +1,7 @@
 {
-  "name": "client-ts",
-  "version": "0.0.1",
-  "description": "A react library developed with dumi",
+  "name": "client",
+  "version": "0.1.0",
+  "description": "websocket client",
   "license": "MIT",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
