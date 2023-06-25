@@ -3,3 +3,4 @@ output
 dist
 es
 build
+*yarn-error.log

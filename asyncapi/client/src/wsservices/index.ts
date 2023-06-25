@@ -1,9 +1,9 @@
 import {
   IDefaultWsProps,
-  IWsOnOpen,
   IWsOnClose,
+  IWsOnError,
   IWsOnMessage,
-  IWsOnError
+  IWsOnOpen,
 } from "./typings";
 
 export class DefaultWsRequestClass {
@@ -12,18 +12,15 @@ export class DefaultWsRequestClass {
 
   constructor(props: IDefaultWsProps<any, any, any>) {
     this.options = props;
-
-    if ("WebSocket" in window) {
-      this.init();
-    } else {
-      throw new Error("浏览器不支持！");
-    }
-
-    return this.ws;
+    this.init();
   }
 
   init() {
     try {
+      if (!("WebSocket" in window)) {
+        throw new Error("浏览器不支持 WebSocket！");
+      }
+
       const { onOpen, onError, onClose, onMessage, ...otherOptions } =
         this.options;
       const params = this.processOptions(otherOptions);
@@ -79,7 +76,7 @@ export class DefaultWsRequestClass {
   }
 
   processOptions(
-    options: IDefaultWsProps<any, any, any>
+    options: IDefaultWsProps<any, any, any>,
   ): IDefaultWsProps<any, any, any> {
     let { prefix = "", url, path = "", query } = options || {};
 
@@ -103,7 +100,7 @@ export class DefaultWsRequestClass {
       return url;
     }
 
-    const paramsToUrlParamsString = (params = {}) => {
+    const paramsToUrlParamsString = (params: any = {}) => {
       return (
         Object.keys(params)
           .map((key) => `${key}=${encodeURIComponent(params[key])}`)
@@ -113,11 +110,11 @@ export class DefaultWsRequestClass {
 
     const idx = url.indexOf("?");
     if (idx >= 0) {
-      const originUrlParams = {};
+      const originUrlParams: any = {};
       url
         .slice(idx + 1)
         .split("&")
-        .filter((i: any) => i)
+        .filter((i: string) => i)
         .forEach((i: string) => {
           const p = i.split("=");
           originUrlParams[p[0]] = p[1] || "";
@@ -130,6 +127,29 @@ export class DefaultWsRequestClass {
 
     return url;
   }
+
+  start() {
+    this.close();
+    this.init();
+  }
+
+  close() {
+    this.ws && this.ws.close();
+  }
+
+  message(message: any) {
+    if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+      console.error("数据发送失败！");
+      return;
+    }
+    const msg = JSON.stringify(message);
+    this.ws.send(msg);
+  }
+
+  destroy() {
+    this.close();
+    this.ws = null;
+  }
 }
 
 // 内部ws类
@@ -140,10 +160,6 @@ export const overwriteWsClass = (WsClass: any) => {
   _WsClass = WsClass;
 };
 
-export default (p) => {
-  try {
-    return new _WsClass(p);
-  } catch (err) {
-    return null;
-  }
+export default (p: any) => {
+  return new _WsClass(p);
 };
