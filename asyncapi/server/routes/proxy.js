@@ -4,6 +4,10 @@ var router = express.Router();
 
 expressWs(router); // ws中间件应用到路由中
 
+const sandbox = require("../utils/sandbox");
+
+sandbox();
+
 router
   // 获取轨迹数据
   .ws("/*", function (ws, req) {
