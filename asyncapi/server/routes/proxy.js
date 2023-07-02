@@ -4,9 +4,34 @@ var router = express.Router();
 
 expressWs(router); // ws中间件应用到路由中
 
-const sandbox = require("../utils/sandbox");
-
-sandbox();
+const pathConfigMap = {
+  "/scene/getList": {
+    internal: 1000,
+    data: {
+      list: [
+        {
+          name: "轨迹",
+        },
+        {
+          name: "灯态",
+        },
+      ],
+    },
+  },
+  "/site/getCasesList": {
+    internal: 2000,
+    data: {
+      list: [
+        {
+          caseName: "1111",
+        },
+        {
+          caseName: "2222",
+        },
+      ],
+    },
+  },
+};
 
 router
   // 获取轨迹数据
@@ -21,35 +46,6 @@ router
     const reqHeaders = req.headers || {};
 
     // console.log("jinlaile", interfacePath, interfaceQuery, reqHeaders);
-
-    const pathConfigMap = {
-      "/scene/getList": {
-        internal: 1000,
-        data: {
-          list: [
-            {
-              name: "轨迹",
-            },
-            {
-              name: "灯态",
-            },
-          ],
-        },
-      },
-      "/site/getCasesList": {
-        internal: 2000,
-        data: {
-          list: [
-            {
-              caseName: "1111",
-            },
-            {
-              caseName: "2222",
-            },
-          ],
-        },
-      },
-    };
 
     // 根据路径及必要参数获取对应路径的请求定义、mock数据等
     let timer = null;

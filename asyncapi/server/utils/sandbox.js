@@ -1,27 +1,34 @@
-// const fetch = require("node-fetch");
+const fetch = require("node-fetch");
 const { VM } = require("vm2");
 
-module.exports = function () {
+function sandbox(code = "", opts = {}) {
+  if (!code) {
+    return;
+  }
+
   // Create a new sandbox
   const vm = new VM({
-    timeout: 3000, // Set a timeout for code execution (in milliseconds)
+    timeout: opts.timeout || 3000, // Set a timeout for code execution (in milliseconds)
     sandbox: {
+      params: {},
+      ret: {},
       console,
-      // // Define the sandboxed global object
-      // console: "redirect", // Redirect console output to the parent environment
+      fetch,
+      ...(opts.sandbox || {}),
     },
   });
 
   // Execute code in the sandbox
   try {
-    const result = vm.run(`
-  (({ name = '' } = {}) => {
-    console.log(1111, global)
-    return \`Hello, \${name}!\`
-  })()
-  `);
-    console.log(result); // Output: 3
-  } catch (error) {
-    console.log("Error:", error.message);
+    const ret = vm.run(code);
+    console.log("ret", ret);
+    return ret;
+  } catch (e) {
+    console.log("Error:", e.message);
+    return;
   }
+}
+
+module.exports = function (code) {
+  return sandbox(code);
 };
