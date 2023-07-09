@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "dev": "nodemon ./bin/www"
+    "dev": "nodemon ./bin/www",
+    "start": "node ./bin/www"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -13,7 +13,10 @@
     "express": "~4.16.1",
     "express-ws": "~5.0.2",
     "http-errors": "~1.6.3",
-    "morgan": "~1.9.1"
+    "md5": "^2.3.0",
+    "morgan": "~1.9.1",
+    "node-fetch": "^2.3.1",
+    "vm2": "^3.9.19"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
