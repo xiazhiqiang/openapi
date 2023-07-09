@@ -1,0 +1,27 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  min-width: 200px;
+  min-height: 200px;
+  background-color: #fff;
+}
+
+.controls {
+}
+.control-item {
+  margin: 10px;
+}
+
+button {
+  outline: none;
+  border: none;
+  border-radius: 2px;
+}
+
+button.current {
+  box-shadow: 0 0 0 2px white, 0 0 0 4px black;
+}
