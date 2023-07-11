@@ -3,18 +3,11 @@
   "version": "1.0",
   "description": "A simple Chrome extension to mock requests",
   "manifest_version": 3,
+  "minimum_chrome_version" : "114",
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "service_worker.js"
   },
-  "permissions": [
-    "tabs",
-    "activeTab",
-    "storage",
-    "scripting",
-    "declarativeNetRequest",
-    "declarativeNetRequestWithHostAccess",
-    "declarativeNetRequestFeedback"
-  ],
+  "permissions": ["tabs", "activeTab", "storage", "scripting"],
   "host_permissions": ["<all_urls>"],
   "action": {
     "default_popup": "./popup/popup.html",
