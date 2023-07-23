@@ -15,7 +15,8 @@
   "license": "ISC",
   "author": "",
   "workspaces": [
-    "asyncapi/*"
+    "asyncapi/*",
+    "mockon/*"
   ],
   "scripts": {
     "bootstrap": "yarn install --ignore-engines",

@@ -1,5 +1,7 @@
 # mock-extensions
 
+> 浏览器 Mock & 代理插件
+
 - options：插件配置页
 
 ```json
