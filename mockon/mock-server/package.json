@@ -1,0 +1,59 @@
+{
+  "name": "mock-server",
+  "version": "1.0.0",
+  "description": "代理及mock服务,数据录制",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "license": "MIT",
+  "author": "Miles",
+  "scripts": {
+    "bootstrap": "rm -rf yarn.lock package-lock.json node_modules && yarn install --ignore-engines",
+    "ci": "npm run lint && npm run cov",
+    "cov": "egg-bin cov",
+    "debug": "egg-bin debug",
+    "dev": "egg-bin dev --sticky",
+    "lint": "eslint .",
+    "start": "egg-scripts start --sticky --daemon --title=egg-server-mock-server",
+    "stop": "egg-scripts stop --title=egg-server-mock-server",
+    "test": "npm run lint -- --fix && npm run test-local",
+    "test-local": "egg-bin test"
+  },
+  "dependencies": {
+    "egg": "^3",
+    "egg-cors": "^2.2.3",
+    "egg-scripts": "^2",
+    "egg-view-nunjucks": "^2.3.0",
+    "egg-websocket-plugin": "^3.0.0-beta.0",
+    "fs-extra": "^11.1.1",
+    "http-proxy-middleware": "^2.0.6",
+    "ip": "^1.1.8",
+    "koa2-connect": "^1.0.2",
+    "lodash": "^4.17.21",
+    "md5": "^2.3.0",
+    "n-readlines": "^1.0.1",
+    "nanoid": "^3.0.0",
+    "qs": "^6.11.2",
+    "request-ip": "^3.3.0",
+    "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "egg-bin": "^5",
+    "egg-ci": "^2",
+    "egg-mock": "^5",
+    "eslint": "^8",
+    "eslint-config-egg": "^12",
+    "ts-node": "^10.9.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "ci": {
+    "version": "16, 18",
+    "type": "github"
+  },
+  "egg": {
+    "declarations": true
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "Mock",
+  "version": "1.0",
+  "description": "A simple Chrome extension to mock requests",
+  "manifest_version": 3,
+  "minimum_chrome_version" : "114",
+  "background": {
+    "service_worker": "service_worker.js"
+  },
+  "permissions": ["tabs", "activeTab", "storage", "scripting"],
+  "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_popup": "./popup/popup.html",
+    "options_page": "./options/options.html"
+  },
+  "options_ui": {
+    "page": "./options/options.html",
+    "open_in_tab": true
+  },
+  "content_scripts": [
+    {
+      "js": ["scripts/content.js"],
+      "matches": ["http://*/*", "https://*/*"],
+      "run_at": "document_idle"
+    },
+    {
+      "js": ["scripts/proxy.js"],
+      "matches": ["http://*/*", "https://*/*"],
+      "run_at": "document_start"
+    }
+  ]
+}

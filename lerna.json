@@ -1,6 +1,6 @@
 {
   "lerna": "6.6.2",
-  "packages": ["asyncapi/*"],
+  "packages": ["asyncapi/*", "mockon/*"],
   "version": "0.1.0",
   "npmClient": "yarn",
   "useWorkspaces": true
