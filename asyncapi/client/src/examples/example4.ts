@@ -1,9 +1,11 @@
-import { renderData } from '../utils/index';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+import { renderData } from "../utils/index";
 import {
   wsproxy_traffic_getTrackData_interId_pub,
   wsproxy_traffic_getTrackData_interId_sub,
-} from '../wsservices/channels/wsproxyTrafficGetTrackDataInterId';
-import { DefaultWsRequestClass, overwriteWsClass } from '../wsservices/index';
+} from "../wsservices/channels/wsproxyTrafficGetTrackDataInterId";
+import { DefaultWsRequestClass, overwriteWsClass } from "../wsservices/index";
 
 overwriteWsClass(
   class WsRequest extends DefaultWsRequestClass {
@@ -21,7 +23,7 @@ overwriteWsClass(
 
       // 定时发送心跳请求
       this.heartbeatTimer = setInterval(() => {
-        ws.send(JSON.stringify({ msg: '心跳数据', query: p.query }));
+        ws.send(JSON.stringify({ msg: "心跳数据", query: p.query }));
       }, 3000);
 
       onOpen(p);
@@ -59,11 +61,11 @@ export default function () {
       renderData(JSON.stringify(data));
     },
     onClose: ({ ws, event }) => {
-      console.log('close', event);
-      renderData('close connection');
+      console.log("close", event);
+      renderData("close connection");
     },
     onError: ({ error }) => {
-      console.log('error', error);
+      console.log("error", error);
     },
   });
 
@@ -74,7 +76,7 @@ export default function () {
     onOpen: ({ ws }) => {
       const data = {
         frameInterval: 1500, // 数据更新间隔时间，单位ms
-        abc: 'xxxxxxxx',
+        abc: "xxxxxxxx",
       };
 
       // 发送必要数据
@@ -82,14 +84,14 @@ export default function () {
     },
     onMessage: ({ ws, msg, data }) => {
       // console.log("msg", msg);
-      renderData(JSON.stringify(data), 'data2');
+      renderData(JSON.stringify(data), "data2");
     },
     onClose: ({ ws, event }) => {
-      console.log('close', event);
-      renderData('close connection', 'data2');
+      console.log("close", event);
+      renderData("close connection", "data2");
     },
     onError: ({ error }) => {
-      console.log('error', error);
+      console.log("error", error);
     },
   });
 }

@@ -1,11 +1,13 @@
-import { renderData } from '../utils/index';
-import wsRequest from '../wsservices/index';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+import { renderData } from "../utils/index";
+import wsRequest from "../wsservices/index";
 
 /**
  * 使用默认的ws请求封装调用
  */
 export default function () {
-  const url = 'ws://127.0.0.1:3000/wsproxy/traffic/getTrackData?id=123';
+  const url = "ws://127.0.0.1:3000/wsproxy/traffic/getTrackData?id=123";
 
   // 心跳
   let heartbeatTimer: any = null;
@@ -19,7 +21,7 @@ export default function () {
 
       // 定时发送心跳请求
       heartbeatTimer = setInterval(() => {
-        ws.send(JSON.stringify({ msg: '心跳数据' }));
+        ws.send(JSON.stringify({ msg: "心跳数据" }));
       }, 3000);
 
       // 发送必要数据
@@ -30,14 +32,14 @@ export default function () {
       renderData(JSON.stringify(data));
     },
     onClose: ({ ws, event }) => {
-      console.log('close', event);
-      renderData('close connection');
+      console.log("close", event);
+      renderData("close connection");
 
       // 停止心跳
       heartbeatTimer && clearInterval(heartbeatTimer);
     },
     onError: ({ error }) => {
-      console.log('error', error);
+      console.log("error", error);
     },
   });
 }
